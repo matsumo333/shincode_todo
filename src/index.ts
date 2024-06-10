@@ -24,10 +24,14 @@ app.get("/allTodos", async (req: Request, res: Response) => {
 app.post("/createTodo", async (req: Request, res: Response) => {
     try {
         const {title,isCompleted}=req.body;
+        if (!title) {
+            return res.status(400).send("Title is required");
+        }
+
         const createTodo = await prisma.todo.create({
-            data:{
+            data: {
                 title,
-                isCompleted,
+                isCompleted: isCompleted ?? false,
             }
         });
         return res.json(createTodo);
